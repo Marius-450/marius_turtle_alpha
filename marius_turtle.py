@@ -156,7 +156,13 @@ class turtle(object):
         self._bg_color = 0
 
         self._splash = displayio.Group(max_size=5)
-        self._bg_bitmap = displayio.Bitmap(self._w//10, self._h//10, 1)
+        self._bgscale = 10
+        if self._w == self._h:
+            self._bg_bitmap = displayio.Bitmap(1, 1, 1)
+            self._bgscale = self._w
+        else:
+            bgscale = GCD(self._w, self._h)
+            self._bg_bitmap = displayio.Bitmap(self._w//self._bgscale, self._h//self._bgscale , 1)
         self._bg_palette = displayio.Palette(1)
         self._bg_palette[0] = Color.colors[self._bg_color]
         self._bg_sprite = displayio.TileGrid(self._bg_bitmap,
@@ -165,13 +171,9 @@ class turtle(object):
         self._bg_group = displayio.Group(scale=10,max_size=1)
         self._bg_group.append(self._bg_sprite)
         self._splash.append(self._bg_group)
-        #self._splash.append(self._bg_sprite)
         # group to add background pictures (and/or user-defined stuff)
         self._bg_addon_group = displayio.Group()
         self._splash.append(self._bg_addon_group)
-
-        # ALFA test
-
         self._fg_scale = scale
         self._w = self._w // self._fg_scale
         self._h = self._h // self._fg_scale
@@ -205,7 +207,6 @@ class turtle(object):
                                                  pixel_shader=self._turtle_palette,
                                                  x=-100, y=-100)
         self._drawturtle()
-        # ALFA test
         self._turtle_group = displayio.Group(scale=self._fg_scale, max_size=1)
         self._turtle_group.append(self._turtle_sprite)
         self._splash.append(self._turtle_group)
@@ -763,4 +764,14 @@ class turtle(object):
             self._heading -= angle
         else:
             self._heading += angle
-        self._heading %= 360         # wrap around
+        self._heading %= 360         # wrap
+
+
+    def _GCD(self, a, b):
+        """GCD(a,b):
+        english : recursive 'Greatest common divisor' calculus for int numbers a and b"""
+        if b==0:
+            return a
+        else:
+            r=a%b
+            return self._GCD(b,r)
