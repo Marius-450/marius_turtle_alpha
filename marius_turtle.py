@@ -161,14 +161,14 @@ class turtle(object):
             self._bg_bitmap = displayio.Bitmap(1, 1, 1)
             self._bgscale = self._w
         else:
-            bgscale = GCD(self._w, self._h)
+            self._bgscale = GCD(self._w, self._h)
             self._bg_bitmap = displayio.Bitmap(self._w//self._bgscale, self._h//self._bgscale , 1)
         self._bg_palette = displayio.Palette(1)
         self._bg_palette[0] = Color.colors[self._bg_color]
         self._bg_sprite = displayio.TileGrid(self._bg_bitmap,
                                              pixel_shader=self._bg_palette,
                                              x=0, y=0)
-        self._bg_group = displayio.Group(scale=10,max_size=1)
+        self._bg_group = displayio.Group(scale=self._bgscale,max_size=1)
         self._bg_group.append(self._bg_sprite)
         self._splash.append(self._bg_group)
         # group to add background pictures (and/or user-defined stuff)
