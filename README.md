@@ -12,8 +12,8 @@ dev repo for improvements of adafruit_turtle lib. demo code for Monster M4sk and
 * added `bgcolor()` method to set and get background color.
 
 ### Memory
-* divided by 100 the memory used for the background bitmap (7200 Bytes -> 72 Bytes for 240x240 display)
-* turtle object take a `scale` parameter (default : 1), that divide the memory used by the foreground bitmap by the square of the scale value. It also divide height and width by this value, and each pixel drawn on the bitmap is rendered by `scale`^2 pixels on the screen. (for 240x240 display and colors between 5 and 16 : scale = 1 -> 28800 Bytes, scale = 2 -> 7200 Bytes)
+* divided the memory used for the background bitmap (around 7200 Bytes saved for 240x240). It draw the tiniest bitmap that can be scaled to full screen for any display shape.
+* turtle object have a new `scale` parameter (default : 1), that divide the memory used by the foreground bitmap by the square of the scale value. It also divide height and width by this value, and each pixel drawn on the bitmap is rendered by `scale`^2 pixels on the screen. (for 240x240 display and colors between 5 and 16 : scale = 1 -> 28800 Bytes, scale = 2 -> 7200 Bytes)
 
 ### Other
 * added `pensize()` method to set and get the pen size. Works with goto, not yet with rotate or set_heading (everything else use goto).
