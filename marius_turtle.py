@@ -156,12 +156,16 @@ class turtle(object):
         self._bg_color = 0
 
         self._splash = displayio.Group(max_size=5)
-        self._bgscale = 10
+        self._bgscale = 1
         if self._w == self._h:
-            self._bg_bitmap = displayio.Bitmap(1, 1, 1)
-            self._bgscale = self._w
+            i = 1
+            while self._bgscale == 1:
+                if self._w/i < 128:
+                    self._bg_bitmap = displayio.Bitmap(i, i, 1)
+                    self._bgscale = self._w//i
+                i += 1
         else:
-            self._bgscale = GCD(self._w, self._h)
+            self._bgscale = self._GCD(self._w, self._h)
             self._bg_bitmap = displayio.Bitmap(self._w//self._bgscale, self._h//self._bgscale , 1)
         self._bg_palette = displayio.Palette(1)
         self._bg_palette[0] = Color.colors[self._bg_color]
