@@ -396,32 +396,78 @@ class turtle(object):
 
     def _plot(self, x, y, c):
         if self._pensize == 1:
-            self._fg_bitmap[int(x), int(y)] = c
-            return
-        offset = 0
-        if self._pensize > 2:
-            if self._pensize % 2 == 0:
-                offset = (self._pensize//2)-1
+            try:
+                self._fg_bitmap[int(x), int(y)] = c
+                return
+            except IndexError:
+                pass
+        r = self._pensize //2
+        sin = math.sin(math.radians(self._heading-90))
+        cos = math.cos(math.radians(self._heading-90))
+        x0 = x + sin * r
+        x1 = x - sin * (self._pensize - r)
+        y0 = y - cos * r
+        y1 = y + cos * (self._pensize - r)
+
+        coords = [x0, x1, y0, y1]
+        for i,v in enumerate(coords):
+            if v >= 0:
+                coords[i] = math.ceil(v)
             else:
-                offset = (self._pensize-1)//2
-        if 45 < self._heading < 135 or 225 < self._heading < 315:
-            j = 1
-            if 225 < self._heading :
-                j = -1
-            for i in range(0-offset,self._pensize-offset):
+                coords[i] = math.floor(v)
+        x0, x1, y0, y1 = coords
+
+        steep = abs(y1 - y0) > abs(x1 - x0)
+        rev = False
+        dx = x1 - x0
+        if steep:
+            x0, y0 = y0, x0
+            x1, y1 = y1, x1
+            dx = x1 - x0
+
+        if x0 > x1:
+            rev = True
+            dx = x0 - x1
+
+        dy = abs(y1 - y0)
+        err = dx / 2
+        ystep = -1
+        if y0 < y1:
+            ystep = 1
+
+        while (not rev and x0 <= x1) or (rev and x1 <= x0):
+            # first row
+            if steep:
                 try:
-                    self._fg_bitmap[int(x)+i*j, int(y)] = c
+                    self._fg_bitmap[int(y0), int(x0)] = c
                 except IndexError:
                     pass
-        else:
-            j = 1
-            if 135 < self._heading < 225:
-                j = -1
-            for i in range(0-offset,self._pensize-offset):
+            else:
                 try:
-                    self._fg_bitmap[int(x), int(y)+i*j] = c
+                    self._fg_bitmap[int(x0), int(y0)] = c
                 except IndexError:
                     pass
+            if y0 != y1:
+                # need a second row to fill the track
+                j = 1 if y1 > y0 else -1
+                if steep:
+                    try:
+                        self._fg_bitmap[int(y0+j), int(x0)] = c
+                    except IndexError:
+                        pass
+                else:
+                    try:
+                        self._fg_bitmap[int(x0), int(y0+j)] = c
+                    except IndexError:
+                        pass
+            err -= dy
+            if err < 0:
+                y0 += ystep
+                err += dx
+            if rev:
+                x0 -= 1
+            else:
+                x0 += 1
 
     def circle(self, radius, extent=None, steps=None):
         """Draw a circle with given radius. The center is radius units left of
