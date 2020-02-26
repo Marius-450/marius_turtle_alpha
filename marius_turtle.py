@@ -211,7 +211,7 @@ class turtle(object):
                                                  pixel_shader=self._turtle_palette,
                                                  x=-100, y=-100)
         self._drawturtle()
-        self._turtle_group = displayio.Group(scale=self._fg_scale, max_size=1)
+        self._turtle_group = displayio.Group(scale=self._fg_scale, max_size=2)
         self._turtle_group.append(self._turtle_sprite)
         self._splash.append(self._turtle_group)
 
@@ -315,7 +315,11 @@ class turtle(object):
         if y0 < y1:
             ystep = 1
         step = 1
-        ts = (((11-self._speed)*0.00020)*(self._speed+0.5))
+        if self._speed > 0:
+            ts = (((11-self._speed)*0.00020)*(self._speed+0.5))
+        else:
+            ts = 0
+
         while (not rev and x0 <= x1) or (rev and x1 <= x0):
             if steep:
                 try:
@@ -382,8 +386,8 @@ class turtle(object):
         :param to_angle: the new turtle heading
 
         """
-
-        self._heading = to_angle
+        self._turn(to_angle - self._heading)
+        #self._heading = to_angle
     seth = setheading
 
     def home(self):
@@ -447,9 +451,9 @@ class turtle(object):
                     self._fg_bitmap[int(x0), int(y0)] = c
                 except IndexError:
                     pass
-            if y0 != y1:
-                # need a second row to fill the track
-                j = 1 if y1 > y0 else -1
+            if y0 != y1 and self._heading%90 != 0:
+                # need a second row to fill the cracks
+                j = -1 if y1 < y0 else 1
                 if steep:
                     try:
                         self._fg_bitmap[int(y0+j), int(x0)] = c
@@ -603,7 +607,7 @@ class turtle(object):
             color = self._color_to_pencolor(color)
         #self._logger.debug('dot(%d)', size)
         self._draw_disk(self._x - size, self._y - size, 2 * size + 1, 2 * size + 1, size, color)
-        self._fg_sprite[0, 0] = 0
+        #self._fg_sprite[0, 0] = 0
 
 
     ############################################################################
@@ -810,16 +814,69 @@ class turtle(object):
     # Other
 
     def _turn(self, angle):
-        if self._logomode:
-            self._heading -= angle
+        if angle%360 == 0:
+            return
+        if not self.isdown() or self._pensize == 1:
+            if self._logomode:
+                self._heading -= angle
+            else:
+                self._heading += angle
+            self._heading %= 360         # wrap
+            return
+        start_angle = self._heading
+        steps = math.ceil((self._pensize*2)*3.1415*(abs(angle)/360))
+        if steps < 1:
+            d_angle = angle
+            steps = 1
         else:
-            self._heading += angle
-        self._heading %= 360         # wrap
+            d_angle = angle/steps
+        #print(self._heading, , steps, angle)
+        if d_angle > 0:
+            d_angle = math.ceil(d_angle)
+        elif d_angle < 0:
+            d_angle = math.floor(d_angle)
+        else:
+            print("d_angle = 0 !", d_angle, angle, steps)
+            if self._logomode:
+                self._heading -= angle
+            else:
+                self._heading += angle
+            self._heading %= 360         # wrap
+            return
+
+
+
+        if abs(angle-steps*d_angle) >= abs(d_angle):
+            steps += abs(angle-steps*d_angle) // abs(d_angle)
+
+        self._plot(self._x, self._y, self._pencolor)
+        for i in range(steps):
+            if self._logomode:
+                self._heading -= d_angle
+            else:
+                self._heading += d_angle
+            self._heading %= 360         # wrap
+            self._plot(self._x, self._y, self._pencolor)
+
+        # error correction
+        #print((start_angle+angle)%360, self._heading,((start_angle+angle)%360)-self._heading,  angle,  steps*d_angle, steps, d_angle)
+        if self._logomode:
+            if self._heading != (start_angle - angle)%360 :
+                self._heading = start_angle - angle
+                self._heading %= 360
+                self._plot(self._x, self._y, self._pencolor)
+        else:
+            if self._heading != (start_angle + angle)%360:
+                #print("err =", self._heading - (start_angle + angle) )
+                self._heading = start_angle + angle
+                self._heading %= 360
+                self._plot(self._x, self._y, self._pencolor)
+
 
 
     def _GCD(self, a, b):
         """GCD(a,b):
-        english : recursive 'Greatest common divisor' calculus for int numbers a and b"""
+        recursive 'Greatest common divisor' calculus for int numbers a and b"""
         if b==0:
             return a
         else:
