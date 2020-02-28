@@ -28,26 +28,11 @@ display2 = tft_gizmo.TFT_Gizmo()
 
 
 
-# add some colors
-# Warning : adding more than 7 colors double the memory used for the _fg bitmap in the turtle object on 240x240 : 28k -> 57k
-Color.LIGHT_GRAY = 0xAAAAAA
-Color.GRAY = 0x444444
-Color.BROWN = 0xCA801D
-Color.DARK_GREEN = 0x008700
-Color.TURQUOISE = 0x00C0C0
-Color.DARK_BLUE = 0x0000AA
-Color.DARK_RED = 0x800000
 
-#Color.colors = Color.colors + (Color.GRAY, Color.LIGHT_GRAY, Color.BROWN, Color.DARK_GREEN,
-#                                Color.TURQUOISE, Color.DARK_BLUE, Color.DARK_RED)
-Color.colors = Color.colors + (Color.GRAY, Color.LIGHT_GRAY, Color.BROWN, Color.DARK_GREEN,
-                                Color.TURQUOISE, Color.DARK_BLUE)
 # to use 2 times less memory, use only 4 colors.
 #Color.colors = Color.colors[:4]
 # to use 4 times less memory, use only 2 colors.
 #Color.colors = Color.colors[:2]
-
-# Warning : Add colors before initialising the turtle. changing a color after initialisation is very tricky. adding one is impossible
 
 gc.collect()
 mem_before = gc.mem_alloc()
