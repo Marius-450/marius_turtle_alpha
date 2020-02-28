@@ -67,8 +67,17 @@ class Color(object):
     BLUE = 0x0000FF
     PURPLE = 0x8040C0
     PINK = 0xFF40C0
+    LIGHT_GRAY = 0xAAAAAA
+    GRAY = 0x444444
+    BROWN = 0xCA801D
+    DARK_GREEN = 0x008700
+    TURQUOISE = 0x00C0C0
+    DARK_BLUE = 0x0000AA
+    DARK_RED = 0x800000
 
-    colors = (BLACK, WHITE, RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, PINK)
+#Color.colors = Color.colors + ()
+    colors = (BLACK, WHITE, RED, YELLOW, GREEN, ORANGE, BLUE, PURPLE, PINK,
+                GRAY, LIGHT_GRAY, BROWN, DARK_GREEN, TURQUOISE, DARK_BLUE, DARK_RED)
 
     def __init__(self):
         pass
@@ -131,8 +140,13 @@ class Vec2D(tuple):
 
 class turtle(object):
     """A Turtle that can be given commands to draw."""
+    __slots__ = ('_display', '_h', '_w', '_x', '_y', '_speed', '_heading', '_logomode', '_fullcircle', '_degreesPerAU', '_mode', '_angleOffset',
+                '_bg_color', '_splash', '_bgscale', '_bg_bitmap', '_bg_palette', '_bg_sprite', '_bg_group', '_bg_addon_group', '_fg_scale',
+                '_fg_bitmap', '_fg_palette', '_fg_sprite', '_fg_group', '_fg_addon_group', '_turtle_bitmap', '_turtle_palette',
+                '_turtle_sprite', '_turtle_group', '_penstate', '_pensize', '_pencolor')
 
     def __init__(self, display=None, scale=1):
+
         if display:
             self._display = display
         else:
@@ -216,7 +230,6 @@ class turtle(object):
         self._splash.append(self._turtle_group)
 
         self._penstate = False
-        self._pencolor = None
         self._pensize = 1
         self.pencolor(Color.WHITE)
 
