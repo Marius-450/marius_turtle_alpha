@@ -140,10 +140,10 @@ class Vec2D(tuple):
 
 class turtle(object):
     """A Turtle that can be given commands to draw."""
-    __slots__ = ('_display', '_h', '_w', '_x', '_y', '_speed', '_heading', '_logomode', '_fullcircle', '_degreesPerAU', '_mode', '_angleOffset',
-                '_bg_color', '_splash', '_bgscale', '_bg_bitmap', '_bg_palette', '_bg_sprite', '_bg_group', '_bg_addon_group', '_fg_scale',
-                '_fg_bitmap', '_fg_palette', '_fg_sprite', '_fg_group', '_fg_addon_group', '_turtle_bitmap', '_turtle_palette',
-                '_turtle_sprite', '_turtle_group', '_penstate', '_pensize', '_pencolor')
+#    __slots__ = ('_display', '_h', '_w', '_x', '_y', '_speed', '_heading', '_logomode', '_fullcircle', '_degreesPerAU', '_mode', '_angleOffset',
+#                '_bg_color', '_splash', '_bgscale', '_bg_bitmap', '_bg_palette', '_bg_sprite', '_bg_group', '_bg_addon_group', '_fg_scale',
+#                '_fg_bitmap', '_fg_palette', '_fg_sprite', '_fg_group', '_fg_addon_group', '_turtle_bitmap', '_turtle_palette',
+#                '_turtle_sprite', '_turtle_group', '_penstate', '_pensize', '_pencolor')
 
     def __init__(self, display=None, scale=1):
 
@@ -161,11 +161,11 @@ class turtle(object):
         self._x = self._w // 2
         self._y = self._h // 2
         self._speed = 6
-        self._heading = 90
-        self._logomode = False
+        self._heading = 0
+        self._logomode = True
         self._fullcircle = 360.0
         self._degreesPerAU = 1.0
-        self._mode = "standard"
+        self._angleOrient = 1
         self._angleOffset = 0
         self._bg_color = 0
 
@@ -233,6 +233,8 @@ class turtle(object):
         self._pensize = 1
         self.pencolor(Color.WHITE)
 
+        self._bg_pic = None
+
         self._display.show(self._splash)
         gc.collect()
 
@@ -250,8 +252,10 @@ class turtle(object):
         :param distance: how far to move (integer or float)
         """
         p = self.pos()
-        x1 = p[0] + math.sin(math.radians(self._heading)) * distance
-        y1 = p[1] + math.cos(math.radians(self._heading)) * distance
+        # works only for degrees.
+        #TODO implement for radians
+        x1 = p[0] + math.sin(math.radians((self._angleOffset + self._angleOrient*self._heading) % self._fullcircle)) * distance
+        y1 = p[1] + math.cos(math.radians((self._angleOffset + self._angleOrient*self._heading) % self._fullcircle)) * distance
         self.goto(x1, y1)
     fd = forward
 
@@ -273,7 +277,10 @@ class turtle(object):
 
         :param angle: how much to rotate to the right (integer or float)
         """
-        self._turn(angle)
+        if self._logomode:
+            self._turn(angle)
+        else:
+            self._turn(-angle)
     rt = right
 
     def left(self, angle):
@@ -283,7 +290,10 @@ class turtle(object):
 
         :param angle: how much to rotate to the left (integer or float)
         """
-        self._turn(-angle)
+        if self._logomode:
+            self._turn(-angle)
+        else:
+            self._turn(angle)
     lt = left
 
     #pylint:disable=too-many-branches,too-many-statements
@@ -418,9 +428,9 @@ class turtle(object):
                 return
             except IndexError:
                 pass
-        r = self._pensize //2
-        sin = math.sin(math.radians(self._heading-90))
-        cos = math.cos(math.radians(self._heading-90))
+        r = self._pensize //2+1
+        sin = math.sin(math.radians((self._angleOffset + self._angleOrient*self._heading - 90) % self._fullcircle))
+        cos = math.cos(math.radians((self._angleOffset + self._angleOrient*self._heading - 90) % self._fullcircle))
         x0 = x + sin * r
         x1 = x - sin * (self._pensize - r)
         y0 = y - cos * r
@@ -631,6 +641,38 @@ class turtle(object):
         return Vec2D(self._x - self._w // 2, self._h // 2 - self._y)
     position = pos
 
+
+    def towards(self, x1, y1=None):
+        """
+
+        Return the angle between the line from turtle position to position
+        specified by (x,y) or the vector. This depends on the turtle's start
+        orientation which depends on the mode - "standard" or "logo").
+
+        :param x: a number or a pair/vector of numbers
+        :param y: a number if x is a number, else None
+
+        """
+        if y1 is None:
+            y1 = x1[1]
+            x1 = x1[0]
+        x0, y0 = self.pos()
+
+        result = math.degrees(math.atan2(x1-x0,y1-y0))
+        result /= self._degreesPerAU
+        return (self._angleOffset + self._angleOrient*result) % self._fullcircle
+        if self._logomode :
+            print("logo mode")
+            return(math.degrees(math.atan2(x0-x1,y0-y1)))
+        else:
+            # not used yet
+            print("standard mode")
+            return(math.degrees(math.atan2(y0-y1,x0-x1)))
+
+
+        #raise NotImplementedError
+
+
     def xcor(self):
         """Return the turtle's x coordinate."""
         return self._x - self._w // 2
@@ -654,10 +696,10 @@ class turtle(object):
         """Helper function for degrees() and radians()"""
         self._fullcircle = fullcircle
         self._degreesPerAU = 360/fullcircle
-        if self._mode == "standard":
+        if self._mode == "logo":
             self._angleOffset = 0
         else:
-            self._angleOffset = fullcircle/4.
+            self._angleOffset = -fullcircle/4.
 
 
     def degrees(self, fullcircle=360):
@@ -672,6 +714,34 @@ class turtle(object):
         """Set the angle measurement units to radians. Equivalent to degrees(2*math.pi)."""
         self._setDegreesPerAU(2*math.pi)
 
+
+    def mode(self, mode=None):
+        """
+
+        Set turtle mode ("standard" or "logo") and perform reset.
+        If mode is not given, current mode is returned.
+
+        Mode "standard" is compatible with old turtle.
+        Mode "logo" is compatible with most Logo turtle graphics.
+
+        :param mode: one of the strings "standard" or "logo"
+        """
+        #raise NotImplementedError
+        if mode == "standard":
+            self._logomode = False
+            self._angleOrient = -1
+            self._angleOffset = self._fullcircle/4
+        elif mode == "logo":
+            self._logomode = True
+            self._angleOrient = 1
+            self._angleOffset = 0
+        elif mode is None:
+            if self._logomode:
+                return "logo"
+            return "standard"
+        else:
+            raise RuntimeError("Mode must be 'logo', 'standard', or None")
+        return None
 
     ############################################################################
     # Drawing state
@@ -786,12 +856,8 @@ class turtle(object):
         self._odb_tilegrid = displayio.TileGrid(odb, pixel_shader=displayio.ColorConverter())
         self._bg_addon_group.append(self._odb_tilegrid)
         #centered
-        # ALFA test
         self._odb_tilegrid.y = ((self._h*self._fg_scale)//2) - (odb.height//2)
         self._odb_tilegrid.x = ((self._w*self._fg_scale)//2) - (odb.width//2)
-
-        #self._odb_tilegrid.y = (self._h//2) - (odb.height//2)
-        #self._odb_tilegrid.x = (self._w//2) - (odb.width//2)
 
     def del_bgpic(self):
         """
@@ -827,17 +893,14 @@ class turtle(object):
     # Other
 
     def _turn(self, angle):
-        if angle%360 == 0:
+        if angle % self._fullcircle == 0:
             return
         if not self.isdown() or self._pensize == 1:
-            if self._logomode:
-                self._heading -= angle
-            else:
-                self._heading += angle
-            self._heading %= 360         # wrap
+            self._heading += angle
+            self._heading %= self._fullcircle         # wrap
             return
         start_angle = self._heading
-        steps = math.ceil((self._pensize*2)*3.1415*(abs(angle)/360))
+        steps = math.ceil((self._pensize*2)*3.1415*(abs(angle)/self._fullcircle))
         if steps < 1:
             d_angle = angle
             steps = 1
@@ -851,10 +914,10 @@ class turtle(object):
         else:
             print("d_angle = 0 !", d_angle, angle, steps)
             if self._logomode:
-                self._heading -= angle
-            else:
                 self._heading += angle
-            self._heading %= 360         # wrap
+            else:
+                self._heading -= angle
+            self._heading %= self._fullcircle         # wrap
             return
 
 
@@ -864,26 +927,17 @@ class turtle(object):
 
         self._plot(self._x, self._y, self._pencolor)
         for i in range(steps):
-            if self._logomode:
-                self._heading -= d_angle
-            else:
-                self._heading += d_angle
-            self._heading %= 360         # wrap
+            self._heading += d_angle
+            self._heading %= self._fullcircle         # wrap
             self._plot(self._x, self._y, self._pencolor)
 
         # error correction
-        #print((start_angle+angle)%360, self._heading,((start_angle+angle)%360)-self._heading,  angle,  steps*d_angle, steps, d_angle)
-        if self._logomode:
-            if self._heading != (start_angle - angle)%360 :
-                self._heading = start_angle - angle
-                self._heading %= 360
-                self._plot(self._x, self._y, self._pencolor)
-        else:
-            if self._heading != (start_angle + angle)%360:
-                #print("err =", self._heading - (start_angle + angle) )
-                self._heading = start_angle + angle
-                self._heading %= 360
-                self._plot(self._x, self._y, self._pencolor)
+
+        if self._heading != (start_angle + angle)%self._fullcircle :
+            self._heading = start_angle + angle
+            self._heading %= self._fullcircle
+            self._plot(self._x, self._y, self._pencolor)
+
 
 
 
