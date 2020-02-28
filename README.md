@@ -9,6 +9,7 @@ dev repo for improvements of adafruit_turtle lib. demo code for Monster M4sk and
 * changed green, pink, purple, values. 
 * put black at the first place, as the color 0 is the default color for the background.
 * Black was redondant in the `_fg_palette`, this permit to add a 16th color before doubling the memory used by `_fg_bitmap`
+* Added 7 colors as 16 consume the same memory as 5 or 9.
 * added `bgcolor()` method to set and get background color.
 
 ### Memory
@@ -16,12 +17,15 @@ dev repo for improvements of adafruit_turtle lib. demo code for Monster M4sk and
 * turtle object have a new `scale` parameter (default : 1), that divide the memory used by the foreground bitmap by the square of the scale value. It also divide height and width by this value, and each pixel drawn on the bitmap is rendered by `scale`^2 pixels on the screen. (for 240x240 display and colors between 5 and 16 : scale = 1 -> 28800 Bytes, scale = 2 -> 7200 Bytes)
 
 ### Other
-* added `pensize()` method to set and get the pen size. Works with goto, not yet with rotate or set_heading (everything else use goto). At any angle, the thickness stay the same.
+* added `pensize()` method to set and get the pen size. Works with goto, and rotate. At any angle, the thickness stay the same.
 * added `speed()` method to set and get the speed of the drawing. default is 6. 1 is slowest, 10 is fast, 0 is "instantaneous" or "the faster you can get" dependant of the pen size.
 * added `set_bgpic()` and `del_bgpic()` methods to set and remove a background picture, using OnDiskBitmap
 * added two intermediary groups
   * between background and foreground (`_bg_addon_group`) for background images, (in the future) stamps, or user defined stuff
   * between foreground and turtle  (`_fg_addon_group`) for writing text (also in the future), or for user defined stuff
+* added `mode()` method to switch between logo and standard modes. logo mode is the default (it was, in reality).
+* added `towards()` method. return the heading angle toward a point. (*idea: gotoward() that do setheading(towards(x,y)) and goto(x,y)*)
+
 
 
 
