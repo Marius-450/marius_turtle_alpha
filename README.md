@@ -10,6 +10,7 @@ dev repo for improvements of adafruit_turtle lib. demo code for Monster M4sk and
 * Black was redondant in the `_fg_palette`, this permit to add a 16th color before doubling the memory used by `_fg_bitmap`
 * Added 7 colors as 16 consume the same memory as 5 or 9.
 * added `bgcolor()` method to set and get background color.
+* when used, the default turtle shape change color when changing pen color.
 
 ### Memory
 * divided the memory used for the background bitmap (around 7200 Bytes saved for 240x240). It draw the tiniest bitmap that can be scaled to full screen for any display shape.
