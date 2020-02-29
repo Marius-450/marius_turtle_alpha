@@ -1,7 +1,7 @@
 
 # Code to demonstrate improvements of marius_turtle (to be added to adafruit_turtle)
 # Retro-compatible by try and except.
-# Code for the Circuit playground with TFT_GIZMO
+# Code for the Monster M4sk
 
 import time
 import board

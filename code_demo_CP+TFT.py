@@ -28,12 +28,6 @@ display2 = tft_gizmo.TFT_Gizmo()
 
 
 
-
-# to use 2 times less memory, use only 4 colors.
-#Color.colors = Color.colors[:4]
-# to use 4 times less memory, use only 2 colors.
-#Color.colors = Color.colors[:2]
-
 gc.collect()
 mem_before = gc.mem_alloc()
 
@@ -49,11 +43,11 @@ turtle1.goto(turtle1._w//2-10,turtle1._h//2-10)
 
 color_choice = 1
 turtle1.pendown()
-turtle1.setheading(0)
+turtle1.setheading(90)
 turtle1.pensize(1)
 
 sizes = [1,2,3,5,11,19]
-
+# not available yet
 s = 0
 
 while True:
@@ -92,26 +86,26 @@ while True:
             pass
         start_time = time.monotonic()
         for i in range(1,6):
-            turtle1.setheading(270)
-            turtle1.goto(turtle1._w//2-10,-(turtle1._h//2-10))
-            turtle1.setheading(180)
-            turtle1.goto(-(turtle1._w//2-10),-(turtle1._h//2-10))
-            turtle1.setheading(90)
-            turtle1.goto(-(turtle1._w//2-10),turtle1._h//2-10)
-            turtle1.setheading(0)
-            turtle1.goto(turtle1._w//2-10,turtle1._h//2-10)
+            turtle1.right(90)
+            turtle1.forward(turtle1._h-20)
+            turtle1.right(90)
+            turtle1.forward(turtle1._w-20)
+            turtle1.right(90)
+            turtle1.forward(turtle1._h-20)
+            turtle1.right(90)
+            turtle1.forward(turtle1._w-20)
             try:
                 turtle1.pencolor(Color.colors[turtle1._bg_color])
             except:
                 turtle1.pencolor(Color.BLACK)
-            turtle1.setheading(270)
-            turtle1.goto(turtle1._w//2-10,-(turtle1._h//2-10))
-            turtle1.setheading(180)
-            turtle1.goto(-(turtle1._w//2-10),-(turtle1._h//2-10))
-            turtle1.setheading(90)
-            turtle1.goto(-(turtle1._w//2-10),turtle1._h//2-10)
-            turtle1.setheading(0)
-            turtle1.goto(turtle1._w//2-10,turtle1._h//2-10)
+            turtle1.right(90)
+            turtle1.forward(turtle1._h-20)
+            turtle1.right(90)
+            turtle1.forward(turtle1._w-20)
+            turtle1.right(90)
+            turtle1.forward(turtle1._h-20)
+            turtle1.right(90)
+            turtle1.forward(turtle1._w-20)
             color_choice += 1
             try:
                 if color_choice >= len(Color.colors):
