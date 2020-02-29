@@ -1,6 +1,9 @@
 # marius_turtle_alpha
-dev repo for improvements of adafruit_turtle lib. demo code for Monster M4sk and Circuit Playground + TFT Gizmo
+Dev repo for improvements of adafruit_turtle lib. <br />
+Demo code for Monster M4sk and Circuit Playground + TFT Gizmo<br />
 
+Lib fully (upward) compatible with adafruit_turtle. Running code written for adafruit_turtle with marius_turtle will make it slower, as the first don't manage speed at all, and that default to speed 6.<br />
+Tested with published code for adafruit_turtle, works flawlessly.
 
 ## What's new ?
 
@@ -24,12 +27,12 @@ dev repo for improvements of adafruit_turtle lib. demo code for Monster M4sk and
   * between background and foreground (`_bg_addon_group`) for background images, (in the future) stamps, or user defined stuff
   * between foreground and turtle  (`_fg_addon_group`) for writing text (also in the future), or for user defined stuff
 * added `mode()` method to switch between logo and standard modes. logo mode is the default (it was, in reality).
-* added `towards()` method. return the heading angle toward a point. (*idea: gotoward() that do setheading(towards(x,y)) and goto(x,y)*)
+* added `towards()` method. return the heading angle toward a point.
 * added `turtleshow()`, `turtlehide()` and `isvisible()` methods to hide and show the turtle, and know the state of visibility.
 * added `changeturtle()` method. Accepts 3 possibilities :
   * No argument : go back to the default shape. if an image file is still open, closes it.
   * a string with a path to an image : use OnDiskBitmap to load the image and replace the turtle shape.
-  * a TileGrid object and a tupple with the dimensions : replace the turtle shape by the Tilegrid object, the tuple must contain the width and height of the bitmap.
+  * a TileGrid object and a tupple with the dimensions : replace the turtle shape by the Tilegrid object, the tuple must contain the width and height of the bitmap (default = (12,12). This value is only used to center the bitmap correctly.
 * added `distance()` method. Return the distance to a point.
 * added `window_height()` and `window_width()` methods to return display dimensions
 
