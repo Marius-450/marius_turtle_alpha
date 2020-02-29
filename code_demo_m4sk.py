@@ -79,6 +79,15 @@ while True:
             turtle1.set_bgpic("/blinka_dark.bmp")
         except:
             pass
+        try:
+            turtle1.changeturtle()
+        except:
+            pass
+    else:
+        try:
+            turtle1.changeturtle("/turtle.bmp")
+        except:
+            pass
     turtle1.pensize(sizes[s])
     s += 1
     if s >= len(sizes):
