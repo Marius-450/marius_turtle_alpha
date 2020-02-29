@@ -53,6 +53,7 @@ import board
 import displayio
 #import adafruit_logging as logging
 
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_turtle.git"
 
@@ -224,23 +225,34 @@ class turtle(object):
         self._turtle_sprite = displayio.TileGrid(self._turtle_bitmap,
                                                  pixel_shader=self._turtle_palette,
                                                  x=-100, y=-100)
-        self._drawturtle()
+
         self._turtle_group = displayio.Group(scale=self._fg_scale, max_size=2)
         self._turtle_group.append(self._turtle_sprite)
         self._splash.append(self._turtle_group)
-
         self._penstate = False
         self._pensize = 1
         self.pencolor(Color.WHITE)
-
         self._bg_pic = None
-
-        self._display.show(self._splash)
+        self._turtle_pic = None
+        self._turtle_odb = None
+        self._turtle_alt_sprite = None
+        self._drawturtle()
         gc.collect()
+        self._display.show(self._splash)
+
+
 
     def _drawturtle(self):
-        self._turtle_sprite.x = int(self._x - 4)
-        self._turtle_sprite.y = int(self._y - 4)
+        if self._turtle_pic == None:
+            self._turtle_sprite.x = int(self._x - 4)
+            self._turtle_sprite.y = int(self._y - 4)
+        else:
+            if self._turtle_odb != None:
+                self._turtle_alt_sprite.x = int(self._x - self._turtle_odb.width//2)
+                self._turtle_alt_sprite.y = int(self._y - self._turtle_odb.height//2)
+            else:
+                self._turtle_alt_sprite.x = int(self._x - self._turtle_pic[0]//2)
+                self._turtle_alt_sprite.y = int(self._y - self._turtle_pic[1]//2)
         #self._logger.debug("pos (%d, %d)", self._x, self._y)
 
     ############################################################################
@@ -632,6 +644,38 @@ class turtle(object):
         self._draw_disk(self._x - size, self._y - size, 2 * size + 1, 2 * size + 1, size, color)
         #self._fg_sprite[0, 0] = 0
 
+    def stamp(self):
+        """Not implemented
+
+        Stamp a copy of the turtle shape onto the canvas at the current
+        turtle position. Return a stamp_id for that stamp, which can be used to
+        delete it by calling clearstamp(stamp_id).
+        """
+        raise NotImplementedError
+
+    def clearstamp(self, stampid):
+        """Not implemented
+
+        Delete stamp with given stampid.
+
+        :param stampid: the id of the stamp to be deleted
+
+        """
+        raise NotImplementedError
+
+    def clearstamps(self, n=None):
+        """Not implemented
+
+        Delete all or first/last n of turtle's stamps. If n is None, delete
+        all stamps, if n > 0 delete first n stamps, else if n < 0 delete last
+        n stamps.
+
+        :param n: how many stamps to delete (None means delete them all)
+
+        """
+        raise NotImplementedError
+
+
 
     ############################################################################
     # Tell turtle's state
@@ -670,8 +714,6 @@ class turtle(object):
             return(math.degrees(math.atan2(y0-y1,x0-x1)))
 
 
-        #raise NotImplementedError
-
 
     def xcor(self):
         """Return the turtle's x coordinate."""
@@ -687,7 +729,21 @@ class turtle(object):
         """
         return self._heading
 
+    def distance(self, x1, y1=None):
+        """
 
+        Return the distance from the turtle to (x,y) or the vector, in turtle
+        step units.
+
+        :param x: a number or a pair/vector of numbers
+        :param y: a number if x is a number, else None
+
+        """
+        if y1 is None:
+            y1 = x1[1]
+            x1 = x1[0]
+        x0, y0 = self.pos()
+        return(math.sqrt((x0-x1)**2+(y0-y1)**2))
 
     ############################################################################
     # Setting and measurement
@@ -743,6 +799,18 @@ class turtle(object):
             raise RuntimeError("Mode must be 'logo', 'standard', or None")
         return None
 
+    def window_height(self):
+        """
+        Return the height of the turtle window."""
+        return self._h
+
+
+    def window_width(self):
+        """
+        Return the width of the turtle window."""
+        return self._w
+
+
     ############################################################################
     # Drawing state
 
@@ -757,6 +825,10 @@ class turtle(object):
         self._penstate = False
     pu = penup
     up = penup
+
+    def isdown(self):
+        """Return True if pen is down, False if it's up."""
+        return self._penstate
 
     def pensize(self, width=None):
         """
@@ -773,9 +845,7 @@ class turtle(object):
         return self._pensize
     width = pensize
 
-    def isdown(self):
-        """Return True if pen is down, False if it's up."""
-        return self._penstate
+
 
     ############################################################################
     # Color control
@@ -797,7 +867,9 @@ class turtle(object):
         pencolor(colorvalue)
             Set pencolor to colorvalue, which is a 24-bit integer such as 0xFF0000.
             The Color class provides the available values:
-            WHITE, BLACK, RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE, PINK
+            BLACK, WHITE, RED, YELLOW, ORANGE, GREEN, BLUE, PURPLE, PINK
+            GRAY, LIGHT_GRAY, BROWN, DARK_GREEN, TURQUOISE, DARK_BLUE, DARK_RED
+
         """
         if c is None:
             return Color.colors[self._pencolor]
@@ -889,6 +961,91 @@ class turtle(object):
             self._fg_palette[i] = c
         time.sleep(0.1)
 
+
+    ############################################################################
+    # Visibility
+
+    def showturtle(self):
+        """
+        Make the turtle visible."""
+        if len(self._turtle_group) == 1:
+            return
+        else:
+            if self._turtle_pic == None:
+                self._turtle_group.append(self._turtle_sprite)
+            else:
+                self._turtle_group.append(self._turtle_alt_sprite)
+            return
+    st = showturtle
+
+    def hideturtle(self):
+        """
+        Make the turtle invisible."""
+        if len(self._turtle_group) == 0:
+            return
+        else:
+            self._turtle_group.pop()
+            return
+    ht = hideturtle
+
+    def isvisible(self):
+        """
+        Return True if the Turtle is shown, False if it's hidden."""
+        if len(self._turtle_group) == 0:
+            return False
+        else:
+            return True
+
+    def changeturtle(self, source=None, dimensions=(12,12)):
+        """
+        Change the turtle.
+        if a string is provided, its a path to an image opened via OnDiskBitmap
+        if a tilegrid is provided, it replace the default one for the turtle shape. << TODO
+        if no argument is provided, the default shape will be restored
+        """
+        if source == None:
+            if self._turtle_pic == None:
+                return
+            else:
+                if len(self._turtle_group) == 1:
+                    self._turtle_group.remove(self._turtle_alt_sprite)
+                    self._turtle_group.append(self._turtle_sprite)
+                self._turtle_alt_sprite = None
+                self._turtle_odb = None
+                if not isinstance(self._turtle_pic, tuple):
+                    self._turtle_pic.close()
+                self._turtle_pic = None
+                return
+        elif isinstance(source, str):
+            visible = self.isvisible()
+            if self._turtle_pic != None:
+                if len(self._turtle_group) == 1:
+                    self._turtle_group.remove(self._turtle_alt_sprite)
+                self._turtle_alt_sprite = None
+                self._turtle_odb = None
+                if not isinstance(self._turtle_pic, tuple):
+                    self._turtle_pic.close()
+                self._turtle_pic = None
+            self._turtle_pic = open(source, 'rb')
+            self._turtle_odb = displayio.OnDiskBitmap(self._turtle_pic)
+            self._turtle_alt_sprite = displayio.TileGrid(self._turtle_odb, pixel_shader=displayio.ColorConverter())
+
+            if len(self._turtle_group) == 1:
+                self._turtle_group.pop()
+            if visible:
+                self._turtle_group.append(self._turtle_alt_sprite)
+            self._drawturtle()
+        elif isinstance(source, displayio.TileGrid):
+            self._turtle_pic = dimensions
+            self._turtle_alt_sprite = source
+            if len(self._turtle_group) == 1:
+                self._turtle_group.pop()
+                self._turtle_group.append(self._turtle_alt_sprite)
+            self._drawturtle()
+        else:
+            raise TypeError('Argument must be "str", a "displayio.TileGrid" or nothing.')
+
+
     ############################################################################
     # Other
 
@@ -906,7 +1063,7 @@ class turtle(object):
             steps = 1
         else:
             d_angle = angle/steps
-        #print(self._heading, , steps, angle)
+
         if d_angle > 0:
             d_angle = math.ceil(d_angle)
         elif d_angle < 0:
@@ -920,8 +1077,6 @@ class turtle(object):
             self._heading %= self._fullcircle         # wrap
             return
 
-
-
         if abs(angle-steps*d_angle) >= abs(d_angle):
             steps += abs(angle-steps*d_angle) // abs(d_angle)
 
@@ -932,13 +1087,10 @@ class turtle(object):
             self._plot(self._x, self._y, self._pencolor)
 
         # error correction
-
         if self._heading != (start_angle + angle)%self._fullcircle :
             self._heading = start_angle + angle
             self._heading %= self._fullcircle
             self._plot(self._x, self._y, self._pencolor)
-
-
 
 
     def _GCD(self, a, b):
