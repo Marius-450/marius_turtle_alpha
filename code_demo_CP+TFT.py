@@ -53,14 +53,22 @@ turtle1.setheading(0)
 turtle1.pensize(1)
 
 sizes = [1,2,3,5,11,19]
-# not available yet
-s = 0
 
+s = 0
 
 while True:
     if s % 2 == 0:
         try:
             turtle1.set_bgpic("/blinka_dark.bmp")
+        except:
+            pass
+        try:
+            turtle1.changeturtle()
+        except:
+            pass
+    else:
+        try:
+            turtle1.changeturtle("/turtle.bmp")
         except:
             pass
     turtle1.pensize(sizes[s])
