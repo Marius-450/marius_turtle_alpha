@@ -35,6 +35,69 @@ Tested with published code for adafruit_turtle, works flawlessly.
   * a TileGrid object and a tupple with the dimensions : replace the turtle shape by the Tilegrid object, the tuple must contain the width and height of the bitmap (default = (12,12). This value is only used to center the bitmap correctly.
 * added `distance()` method. Return the distance to a point.
 * added `window_height()` and `window_width()` methods to return display dimensions
+* Fixed some rounding error accumulating in `circle()` process. Last step make sure the heading and position are the same as starting heading and position.
+
+### French translation
+
+First version for tests of translations. Use ~1KB more memory than english turtle. <br />
+Première version pour tester les traductions. Utilise environ 1Ko de mémoire en plus par rapport a la tortue originale.<br/>
+Documentation détaillée à venir.
+
+#### Usage
+
+```python
+from marius_turtle_french import Colors, turtle_fr
+
+tortue = turtle_fr(display)
+
+tortue.vitesse(6)
+tortue.baissecrayon()
+
+tortue.avance(100)
+tortue.droite(90)
+tortue.avance(100)
+tortue.fixecap(tortue.vers(0,0))
+tortue.aller(0,0)
+tortue.fixecap(0)
+```
 
 
+#### Liste des couleurs en français
+NOIR, BLANC, ROUGE, JAUNE, VERT, ORANGE, BLEU, VIOLET, ROSE, GRIS, GRIS_CLAIR, BRUN, VERT_FONCE, TURQUOISE, BLEU_FONCE, ROUGE_FONCE<br />
+
+#### Liste des commandes en francais
+* av, avance -> forward
+* re, recule -> backward
+* td, droite -> right
+* tg, gauche -> left
+* fixexy, aller, fpos, fixeposition -> goto
+* degres -> degrees
+* lc, levecrayon -> penup
+* bc, baissecrayon -> pendown
+* etatcrayon -> isdown
+* origine -> home
+* vitesse -> speed
+* cercle -> circle
+* cap -> heading
+* fcap, fixecap -> setheading
+* tc, tailleducrayon -> pensize
+* cf, couleurfond -> bgcolor
+* fce, fixecouleurecran -> bgcolor
+* cc, couleurcrayon -> pencolor
+* fcc, fixecouleurcrayon -> pencolor
+* fif, fixeimagefond -> set_bgpic
+* sif, supprimeimagefond -> del_bgpic
+* montretortue -> showturtle
+* cachetortue -> hideturtle
+* estvisible -> isvisible
+* changetortue -> changeturtle
+* coordx -> xcor
+* coordy -> ycor
+* fixex -> setx
+* fixey -> sety
+* nettoie -> clear
+* vers, directionde -> towards
+* hauteurfenetre -> window_height
+* largeurfenetre -> window_width
+* point -> dot
 
