@@ -34,8 +34,8 @@ Color = Couleur
 class turtle_fr(turtle):
     """Une Tortue a laquelle on donne des commandes pour dessiner"""
 
-    def __init__(self, display=None, scale=1):
-        super().__init__(display, scale)
+    def __init__(self, display=None, echelle=1):
+        super().__init__(display, echelle)
         #print("Tortue en francais en attente des ordres.")
         self.av = self.avance = self.forward
         self.degres = self.degrees
@@ -48,7 +48,7 @@ class turtle_fr(turtle):
 
         self.lc = self.levecrayon = self.penup
         self.bc = self.baissecrayon = self.pendown
-        self.etatcrayon = self.isdown()
+        self.etatcrayon = self.isdown
 
         self.origine = self.home
         self.vitesse = self.speed
