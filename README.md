@@ -37,35 +37,38 @@ Tested with published code for adafruit_turtle, works flawlessly.
 * added `window_height()` and `window_width()` methods to return display dimensions
 * Fixed some rounding error accumulating in `circle()` process. Last step make sure the heading and position are the same as starting heading and position.
 
-### French translation
+## French translation
 
 First version for tests of translations. Use ~1KB more memory than english turtle. <br />
 Première version pour tester les traductions. Utilise environ 1Ko de mémoire en plus par rapport a la tortue originale.<br/>
 Documentation détaillée à venir.
 
-#### Usage
+### Usage
 
 ```python
 from marius_turtle_french import Colors, turtle_fr
 
 tortue = turtle_fr(display)
+# pour utiliser moins de mémoire, appeler la tortue avec l'argument echelle:
+# tortue = turtle_fr(display, echelle=2)
+
 
 tortue.vitesse(6)
 tortue.baissecrayon()
 
-tortue.avance(100)
+tortue.avance(60)
 tortue.droite(90)
-tortue.avance(100)
+tortue.avance(60)
 tortue.fixecap(tortue.vers(0,0))
 tortue.aller(0,0)
 tortue.fixecap(0)
 ```
 
 
-#### Liste des couleurs en français
+### Liste des couleurs en français
 NOIR, BLANC, ROUGE, JAUNE, VERT, ORANGE, BLEU, VIOLET, ROSE, GRIS, GRIS_CLAIR, BRUN, VERT_FONCE, TURQUOISE, BLEU_FONCE, ROUGE_FONCE<br />
 
-#### Liste des commandes en francais
+### Liste des commandes en francais
 * av, avance -> forward
 * re, recule -> backward
 * td, droite -> right
