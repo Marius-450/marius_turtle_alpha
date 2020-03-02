@@ -76,7 +76,6 @@ class Color(object):
     DARK_BLUE = 0x0000AA
     DARK_RED = 0x800000
 
-#Color.colors = Color.colors + ()
     colors = (BLACK, WHITE, RED, YELLOW, GREEN, ORANGE, BLUE, PURPLE, PINK,
                 GRAY, LIGHT_GRAY, BROWN, DARK_GREEN, TURQUOISE, DARK_BLUE, DARK_RED)
 
@@ -141,10 +140,6 @@ class Vec2D(tuple):
 
 class turtle(object):
     """A Turtle that can be given commands to draw."""
-#    __slots__ = ('_display', '_h', '_w', '_x', '_y', '_speed', '_heading', '_logomode', '_fullcircle', '_degreesPerAU', '_mode', '_angleOffset',
-#                '_bg_color', '_splash', '_bgscale', '_bg_bitmap', '_bg_palette', '_bg_sprite', '_bg_group', '_bg_addon_group', '_fg_scale',
-#                '_fg_bitmap', '_fg_palette', '_fg_sprite', '_fg_group', '_fg_addon_group', '_turtle_bitmap', '_turtle_palette',
-#                '_turtle_sprite', '_turtle_group', '_penstate', '_pensize', '_pencolor')
 
     def __init__(self, display=None, scale=1):
 
@@ -159,8 +154,8 @@ class turtle(object):
         #self._logger.setLevel(logging.INFO)
         self._w = self._display.width
         self._h = self._display.height
-        self._x = self._w // 2
-        self._y = self._h // 2
+        self._x = self._w // (2 * scale)
+        self._y = self._h // (2 * scale)
         self._speed = 6
         self._heading = 0
         self._logomode = True
@@ -529,22 +524,29 @@ class turtle(object):
         # --or: circle(radius, extent)          # arc
         # --or: circle(radius, extent, steps)
         # --or: circle(radius, steps=6)         # 6-sided polygon
-
+        pos = self.pos()
+        h = self._heading
         if extent is None:
             extent = self._fullcircle
         if steps is None:
             frac = abs(extent)/self._fullcircle
-            steps = 1+int(min(11+abs(radius)/6.0, 59.0)*frac)
+            steps = int(min(3+abs(radius)/4.0, 12.0)*frac)*4
+
         w = 1.0 * extent / steps
         w2 = 0.5 * w
-        l = 2.0 * radius * math.sin(w2*math.pi/180.0*self._degreesPerAU)
+        l = radius * math.sin(w*math.pi/180.0*self._degreesPerAU)
         if radius < 0:
             l, w, w2 = -l, -w, -w2
+        print("circle", radius, w, steps, w*steps, l)
         self.left(w2)
-        for _ in range(steps):
+        for _ in range(steps-1):
             self.forward(l)
             self.left(w)
-        self.right(w2)
+        #rounding error correction on the last step
+        self.setheading(self.towards(pos))
+        # get back to exact same position and heading
+        self.goto(pos)
+        self.setheading(h)
 
     def _draw_disk(self, x, y, width, height, r, color, fill=True, outline=True, stroke=1):
         """Draw a filled and/or outlined circle"""
@@ -594,7 +596,8 @@ class turtle(object):
         ddF_y = -2 * r
         x = -1
         y = r
-
+        size = self._pensize
+        self._pensize = 1
         while x < y:
             if f >= 0:
                 y -= 1
@@ -621,7 +624,7 @@ class turtle(object):
                 self._plot(x0 + y + x_offset - line, y0 + x + y_offset, color)
                 self._plot(x0 + x + x_offset, y0 - y + line, color)
                 self._plot(x0 + y + x_offset - line, y0 - x, color)
-
+        self._pensize = size
     # pylint: enable=too-many-locals, too-many-branches
 
 #pylint:disable=keyword-arg-before-vararg
@@ -1092,7 +1095,6 @@ class turtle(object):
             self._heading %= self._fullcircle
             self._plot(self._x, self._y, self._pencolor)
 
-
     def _GCD(self, a, b):
         """GCD(a,b):
         recursive 'Greatest common divisor' calculus for int numbers a and b"""
@@ -1101,3 +1103,4 @@ class turtle(object):
         else:
             r=a%b
             return self._GCD(b,r)
+
