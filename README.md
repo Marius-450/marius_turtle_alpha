@@ -24,8 +24,8 @@ Tested with published code for adafruit_turtle, works flawlessly.
 * added `speed()` method to set and get the speed of the drawing. default is 6. 1 is slowest, 10 is fast, 0 is "instantaneous" or "the faster you can get" dependant of the pen size.
 * added `set_bgpic()` and `del_bgpic()` methods to set and remove a background picture, using OnDiskBitmap
 * added two intermediary groups
-  * between background and foreground (`_bg_addon_group`) for background images, (in the future) stamps, or user defined stuff
-  * between foreground and turtle  (`_fg_addon_group`) for writing text (also in the future), or for user defined stuff
+  * between background and foreground (`_bg_addon_group`) for background images or user defined stuff
+  * between foreground and turtle  (`_fg_addon_group`) for writing text (in the future), stamps, or for user defined stuff
 * added `mode()` method to switch between logo and standard modes. logo mode is the default (it was, in reality).
 * added `towards()` method. return the heading angle toward a point.
 * added `turtleshow()`, `turtlehide()` and `isvisible()` methods to hide and show the turtle, and know the state of visibility.
