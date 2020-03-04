@@ -36,6 +36,8 @@ Tested with published code for adafruit_turtle, works flawlessly.
 * added `distance()` method. Return the distance to a point.
 * added `window_height()` and `window_width()` methods to return display dimensions
 * Fixed some rounding error accumulating in `circle()` process. Last step make sure the heading and position are the same as starting heading and position.
+* Added `stamp()`, `clearstamp()` and `clearstamps()` methods to stamp the turtle shape on the canvas and remove those stamps.
+
 
 ## French translation
 
@@ -103,4 +105,7 @@ NOIR, BLANC, ROUGE, JAUNE, VERT, ORANGE, BLEU, VIOLET, ROSE, GRIS, GRIS_CLAIR, B
 * hauteurfenetre -> window_height
 * largeurfenetre -> window_width
 * point -> dot
+* tamponner -> stamp
+* detamponner -> clearstamp
+* toutdetamponner -> clearstamps
 

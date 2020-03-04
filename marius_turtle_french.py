@@ -34,8 +34,8 @@ Color = Couleur
 class turtle_fr(turtle):
     """Une Tortue a laquelle on donne des commandes pour dessiner"""
 
-    def __init__(self, display=None, echelle=1):
-        super().__init__(display, echelle)
+    def __init__(self, display=None, scale=1):
+        super().__init__(display, scale)
         #print("Tortue en francais en attente des ordres.")
         self.av = self.avance = self.forward
         self.degres = self.degrees
@@ -61,7 +61,7 @@ class turtle_fr(turtle):
         self.cf = self.couleurfond = self.bgcolor
         self.fce = self.fixecouleurecran = self.bgcolor
 
-        self.cc = self.couleurcraypon = self.pencolor
+        self.cc = self.couleurcrayon = self.pencolor
         self.fcc = self.fixecouleurcrayon = self.pencolor
 
         self.fif = self.fixeimagefond = self.set_bgpic
@@ -84,17 +84,11 @@ class turtle_fr(turtle):
         self.hauteurfenetre = self.window_height
         self.largeurfenetre = self.window_width
         self.point = self.dot
+        self.tamponner = self.stamp
+        self.detamponner = self.clearstamp
+        self.toutdetamponner = self.clearstamps
 
 
-
-"""
-NOT IMPLEMENTED YET
-
-stamp   clearstamp      clearstamps
-
-
-
-"""
 
 
 
