@@ -84,9 +84,10 @@ class turtle_fr(turtle):
         self.hauteurfenetre = self.window_height
         self.largeurfenetre = self.window_width
         self.point = self.dot
-        self.tamponner = self.stamp
-        self.detamponner = self.clearstamp
-        self.toutdetamponner = self.clearstamps
+        self.tamponne = self.stamp
+        self.detamponne = self.clearstamp
+        self.detamponnetout = self.clearstamps
+        self.reinitialise = self.reinit = self.reset
 
 
 
