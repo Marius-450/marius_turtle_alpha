@@ -47,6 +47,25 @@ I noticed the default mode was not consistent with the documentation. Default he
 * Added `stamp()`, `clearstamp()` and `clearstamps()` methods to stamp the turtle shape on the canvas and remove those stamps.
 * Added `reset()` method to reset the turtle to start parameters
 
+## TODO
+
+* write text
+* pen dict to get or set multiple parameters at once
+* polygons
+* filling shapes
+* getcanvas : something like screenshot
+
+## To be discarded ?
+
+* event-based methods (onclick, onrelease etc.) There is no mouse, and no event management user side.
+* undo buffer : no use case come to mind. much complexification, increased memory use, with few to no benefits at all.
+* tilt angle and sheer factor : Can't see a way to fully implement that. rotation is only possible for 90° increments.
+* registering of turtle shapes. use a user-side made tilegrid is much easier.
+* clone, turtles : there is no way to duplicate (deep copy) the turtle object, and no (easy) way to run 2 turtles on the same display 
+* getturtle, getscreen : no use case.
+* colormode : as we use a custom color object, and we don't set the colors manualy.
+
+
 ## French translation
 
 First version for tests of translations. Use ~1KB more memory than english turtle. <br />
