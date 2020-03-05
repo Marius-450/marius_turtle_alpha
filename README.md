@@ -29,33 +29,34 @@ I noticed the default mode was not consistent with the documentation. Default he
 
 
 ### Other
-* added `pensize()` method to set and get the pen size. Works with goto, and rotate. At any angle, the thickness stay the same.
-* added `speed()` method to set and get the speed of the drawing. default is 6. 1 is slowest, 10 is fast, 0 is "instantaneous" or "the faster you can get" dependant of the pen size.
-* added `set_bgpic()` and `del_bgpic()` methods to set and remove a background picture, using OnDiskBitmap
-* added two intermediary groups
+* Added `pensize()` method to set and get the pen size. Works with goto, and rotate. At any angle, the thickness stay the same.
+* Added `speed()` method to set and get the speed of the drawing. default is 6. 1 is slowest, 10 is fast, 0 is "instantaneous" or "the faster you can get" dependant of the pen size.
+* Added `set_bgpic()` and `del_bgpic()` methods to set and remove a background picture, using OnDiskBitmap
+* Added two intermediary groups
   * between background and foreground (`_bg_addon_group`) for background images or user defined stuff
   * between foreground and turtle  (`_fg_addon_group`) for writing text (in the future), stamps, or for user defined stuff
-* added `towards()` method. return the heading angle toward a point.
-* added `turtleshow()`, `turtlehide()` and `isvisible()` methods to hide and show the turtle, and know the state of visibility.
-* added `changeturtle()` method. Accepts 3 possibilities :
+* Added `towards()` method. return the heading angle toward a point.
+* Added `turtleshow()`, `turtlehide()` and `isvisible()` methods to hide and show the turtle, and know the state of visibility.
+* Added `changeturtle()` method. Accepts 3 possibilities :
   * No argument : go back to the default shape. if an image file is still open, closes it.
   * a string with a path to an image : use OnDiskBitmap to load the image and replace the turtle shape.
-  * a TileGrid object and a tupple with the dimensions : replace the turtle shape by the Tilegrid object, the tuple must contain the width and height of the bitmap (default = (12,12). This value is only used to center the bitmap correctly.
-* added `distance()` method. Return the distance to a point.
-* added `window_height()` and `window_width()` methods to return display dimensions
+  * a TileGrid object and a tupple with the dimensions : replace the turtle shape by the Tilegrid object, the tuple must contain the width and height of the bitmap (default = (12,12) ). This value is only used to center the bitmap correctly.
+* Added `distance()` method. Return the distance to a point.
+* Added `window_height()` and `window_width()` methods to return display dimensions
 * Fixed some rounding error accumulating in `circle()` process. Last step make sure the heading and position are the same as starting heading and position.
 * Added `stamp()`, `clearstamp()` and `clearstamps()` methods to stamp the turtle shape on the canvas and remove those stamps.
-* Added `reset()` method to reset the turtle to start parameters
+* Added `reset()` method to erase all drawings and reset the turtle to default parameters and position
+* Simplified `dot()` to use turn instead of 2 helper methods. the first arg is now the diameter instead of radius, to be consistent with the documentation. Resulting dot is rounder.
 
 ## TODO
 
 * write text
-* pen dict to get or set multiple parameters at once
+* pen dict : get or set multiple parameters at once
 * polygons
 * filling shapes
-* getcanvas : something like screenshot
+* getcanvas : something like a screenshot.
 
-## To be discarded ?
+## To be discarded
 
 * event-based methods (onclick, onrelease etc.) There is no mouse, and no event management user side.
 * undo buffer : no use case come to mind. much complexification, increased memory use, with few to no benefits at all.

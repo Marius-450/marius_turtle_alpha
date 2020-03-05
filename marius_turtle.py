@@ -542,16 +542,6 @@ class turtle(object):
         self.goto(pos)
         self.setheading(h)
 
-    def _draw_disk(self, x, y, width, height, r, color, fill=True,
-                  outline=True, stroke=1):
-        """Draw a filled and/or outlined circle"""
-        if fill:
-            self._helper(x+r, y+r, r, color=color, fill=True,
-                         x_offset=width-2*r-1, y_offset=height-2*r-1)
-        if outline:
-            self._helper(x+r, y+r, r, color=color, stroke=stroke,
-                         x_offset=width-2*r-1, y_offset=height-2*r-1)
-
     def speed(self, speed=None):
         """
 
@@ -582,47 +572,6 @@ class turtle(object):
         else:
             self._speed = speed
 
-    # pylint: disable=too-many-locals, too-many-branches
-    def _helper(self, x0, y0, r, color, x_offset=0, y_offset=0,
-                stroke=1, fill=False):
-        """Draw quandrant wedges filled or outlined"""
-        f = 1 - r
-        ddF_x = 1
-        ddF_y = -2 * r
-        x = -1
-        y = r
-        size = self._pensize
-        self._pensize = 1
-        while x < y:
-            if f >= 0:
-                y -= 1
-                ddF_y += 2
-                f += ddF_y
-            x += 1
-            ddF_x += 2
-            f += ddF_x
-            if fill:
-                for w in range(x0-y, x0+y+x_offset):
-                    self._plot(w, y0 + x + y_offset, color)
-                    self._plot(w, y0 - x, color)
-                for w in range(x0-x, x0+x+x_offset):
-                    self._plot(w, y0 + y + y_offset, color)
-                    self._plot(w, y0 - y, color)
-            else:
-                for line in range(stroke):
-                    self._plot(x0 - y + line, y0 + x + y_offset, color)
-                    self._plot(x0 - x, y0 + y + y_offset - line, color)
-                    self._plot(x0 - y + line, y0 - x, color)
-                    self._plot(x0 - x, y0 - y + line, color)
-            for line in range(stroke):
-                self._plot(x0 + x + x_offset, y0 + y + y_offset - line, color)
-                self._plot(x0 + y + x_offset - line, y0 + x + y_offset, color)
-                self._plot(x0 + x + x_offset, y0 - y + line, color)
-                self._plot(x0 + y + x_offset - line, y0 - x, color)
-        self._pensize = size
-    # pylint: enable=too-many-locals, too-many-branches
-
-#pylint:disable=keyword-arg-before-vararg
     def dot(self, size=None, color=None):
         """Draw a circular dot with diameter size, using color.
         If size is not given, the maximum of pensize+4 and
@@ -638,7 +587,23 @@ class turtle(object):
             color = self._pencolor
         else:
             color = self._color_to_pencolor(color)
-        self._draw_disk(self._x - size, self._y - size, 2 * size + 1, 2 * size + 1, size, color)
+        pensize = self._pensize
+        pencolor = self._pencolor
+        down = self.isdown()
+        if size > 1:
+            self._pensize = size
+            self._pencolor = color
+            self.pendown()
+            self.right(180)
+            self.right(180)
+            if not down:
+                self.penup()
+            self._pensize = pensize
+            self._pencolor = pencolor
+        else:
+            self._pensize = 1
+            self._plot(self._x, self._y, color)
+            self._pensize = pensize
 
     def stamp(self, bitmap=None, palette=None):
         """
@@ -983,13 +948,14 @@ class turtle(object):
         and set variables to the default values."""
         self.changeturtle()
         self.del_bgpic()
+        self.bgcolor(Color.BLACK)
         self.clear()
         self.penup()
         self.goto(0, 0)
         self.setheading(0)
         self.pensize(1)
         self.pencolor(Color.WHITE)
-        self.bgcolor(Color.BLACK)
+
 
 
     def clear(self):
