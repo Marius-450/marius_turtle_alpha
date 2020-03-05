@@ -977,8 +977,24 @@ class turtle(object):
     ###########################################################################
     # More drawing control
 
+    def reset(self):
+        """
+        Delete the turtle's drawings from the screen, re-center the turtle
+        and set variables to the default values."""
+        self.changeturtle()
+        self.del_bgpic()
+        self.clear()
+        self.penup()
+        self.goto(0, 0)
+        self.setheading(0)
+        self.pensize(1)
+        self.pencolor(Color.WHITE)
+        self.bgcolor(Color.BLACK)
+
+
     def clear(self):
         """Delete the turtle's drawings from the screen. Do not move turtle."""
+        self.clearstamps()
         for w in range(self._w):
             for h in range(self._h):
                 self._fg_bitmap[w, h] = self._bg_color
