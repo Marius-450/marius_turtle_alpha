@@ -31,7 +31,10 @@ I noticed the default mode was not consistent with the documentation. Default he
 ### Other
 * Added `pensize()` method to set and get the pen size. Works with goto, and rotate. At any angle, the thickness stay the same.
 * Added `speed()` method to set and get the speed of the drawing. default is 6. 1 is slowest, 10 is fast, 0 is "instantaneous" or "the faster you can get" dependant of the pen size.
-* Added `set_bgpic()` and `del_bgpic()` methods to set and remove a background picture, using OnDiskBitmap
+* Added `bgpic()` method to set and remove a background picture, using OnDiskBitmap
+  * `bgpic()` return the background picture filename, if any.
+  * `bgpic("nopic")` remove the picture from background.
+  * `bgpic(filename)` set a picture as background.
 * Added two intermediary groups
   * between background and foreground (`_bg_addon_group`) for background images or user defined stuff
   * between foreground and turtle  (`_fg_addon_group`) for writing text (in the future), stamps, or for user defined stuff
