@@ -59,13 +59,12 @@ class turtle_fr(turtle):
 
         self.tc = self.tailleducrayon = self.pensize
         self.cf = self.couleurfond = self.bgcolor
-        self.fce = self.fixecouleurecran = self.bgcolor
+        self.fcf = self.fixecouleurfond = self.bgcolor
 
         self.cc = self.couleurcrayon = self.pencolor
         self.fcc = self.fixecouleurcrayon = self.pencolor
 
-        self.fif = self.fixeimagefond = self.set_bgpic
-        self.sif = self.supprimeimagefond = self.del_bgpic
+        self.imagefond = self.bgpic
 
         self.montretortue = self.showturtle
         self.cachetortue = self.hideturtle

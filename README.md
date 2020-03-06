@@ -121,8 +121,7 @@ NOIR, BLANC, ROUGE, JAUNE, VERT, ORANGE, BLEU, VIOLET, ROSE, GRIS, GRIS_CLAIR, B
 * fce, fixecouleurecran -> bgcolor
 * cc, couleurcrayon -> pencolor
 * fcc, fixecouleurcrayon -> pencolor
-* fif, fixeimagefond -> set_bgpic
-* sif, supprimeimagefond -> del_bgpic
+* imagefond -> bgpic
 * montretortue -> showturtle
 * cachetortue -> hideturtle
 * estvisible -> isvisible
