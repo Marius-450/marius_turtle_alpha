@@ -75,7 +75,7 @@ s = 0
 while True:
     if s % 2 == 0:
         try:
-            turtle1.set_bgpic("/blinka_dark.bmp")
+            turtle1.bgpic("/blinka_dark.bmp")
         except:
             pass
         try:
@@ -147,7 +147,7 @@ while True:
             print(time.monotonic() - start_time, "sec")
         time.sleep(2)
     try:
-        turtle1.del_bgpic()
+        turtle1.bgpic("nopic")
     except:
         pass
 
